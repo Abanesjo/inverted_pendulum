@@ -1,0 +1,153 @@
+<sdf version='1.7'>
+  <model name='inverted_pendulum'>
+    <joint name='world_to_rail' type='fixed'>
+      <pose relative_to='__model__'>0 0 1.5 0 -0 0</pose>
+      <parent>world</parent>
+      <child>rail</child>
+    </joint>
+    <link name='rail'>
+      <pose relative_to='world_to_rail'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>1185</mass>
+        <inertia>
+          <ixx>1.975</ixx>
+          <ixy>8.1883e-15</ixy>
+          <ixz>4.0808e-12</ixz>
+          <iyy>22220</iyy>
+          <iyz>5.7101e-17</iyz>
+          <izz>22220</izz>
+        </inertia>
+      </inertial>
+      <collision name='rail_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://inverted_pendulum/meshes/rail.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='rail_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://inverted_pendulum/meshes/rail.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='rail_to_cart' type='prismatic'>
+      <pose relative_to='rail'>-0.15237 0 0 1.5708 -0 0</pose>
+      <parent>rail</parent>
+      <child>cart</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-7</lower>
+          <upper>7</upper>
+          <effort>1e8</effort>
+          <velocity>1e6</velocity>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='cart'>
+      <pose relative_to='rail_to_cart'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.25 0.004636 0 0 -0 0</pose>
+        <mass>328.4</mass>
+        <inertia>
+          <ixx>14.594</ixx>
+          <ixy>3.1752e-16</ixy>
+          <ixz>-4.9616e-16</ixz>
+          <iyy>13.798</iyy>
+          <iyz>1.7612e-16</iyz>
+          <izz>14.314</izz>
+        </inertia>
+      </inertial>
+      <collision name='cart_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://inverted_pendulum/meshes/cart.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='cart_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://inverted_pendulum/meshes/cart.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>te
+    </link>
+    <joint name='cart_to_pole' type='revolute'>
+      <pose relative_to='cart'>-0.25 0.39 0 0 -0 1.5708</pose>
+      <parent>cart</parent>
+      <child>pole</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>50</effort>
+          <velocity>10</velocity>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <damping>1</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='pole'>
+      <pose relative_to='cart_to_pole'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.64529 -0 3e-06 0 -0 0</pose>
+        <mass>64.615</mass>
+        <inertia>
+          <ixx>0.09831</ixx>
+          <ixy>-9.7663e-06</ixy>
+          <ixz>-2.3047e-05</ixz>
+          <iyy>13.524</iyy>
+          <iyz>-2.2096e-06</iyz>
+          <izz>13.476</izz>
+        </inertia>
+      </inertial>
+      <collision name='pole_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://inverted_pendulum/meshes/pole.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='pole_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://inverted_pendulum/meshes/pole.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+  <plugin name="PID" filename="libpid_controller.so">
+    <namespace>inverted_pendulum</namespace>
+    <revolute_joint>cart_to_pole</revolute_joint>
+    <prismatic_joint>rail_to_cart</prismatic_joint>
+  </plugin>
+</sdf>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="invertedPendulum">
+
+  <link name="world"/>
+
+  <joint name="world_to_rail" type="fixed">
+    <parent link="world"/>
+    <child link="rail"/>
+    <origin xyz="0 0 1.5" rpy="0 0 0"/>
+  </joint>
+
+  <link
+    name="rail">
+    <inertial>
+      <origin
+        xyz="0 2.6021E-18 -8.0954E-18"
+        rpy="0 0 0" />
+      <mass
+        value="1185" />
+      <inertia
+        ixx="1.975"
+        ixy="8.1883E-15"
+        ixz="4.0808E-12"
+        iyy="22220"
+        iyz="5.7101E-17"
+        izz="22220" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://invertedPendulum/meshes/rail.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.64706 0.61961 0.58824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://invertedPendulum/meshes/rail.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="cart">
+    <inertial>
+      <origin
+        xyz="-0.25 0.0046357 1.3321E-17"
+        rpy="0 0 0" />
+      <mass
+        value="328.4" />
+      <inertia
+        ixx="14.594"
+        ixy="3.1752E-16"
+        ixz="-4.9616E-16"
+        iyy="13.798"
+        iyz="1.7612E-16"
+        izz="14.314" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://invertedPendulum/meshes/cart.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://invertedPendulum/meshes/cart.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rail_to_cart"
+    type="prismatic">
+    <origin
+      xyz="-0.15237 0 0"
+      rpy="1.5708 0 0" />
+    <parent
+      link="rail" />
+    <child
+      link="cart" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-10"
+      upper="10"
+      effort="0"
+      velocity="0" />
+    <dynamics
+      friction="5.0"/>
+  </joint>
+  <link
+    name="pole">
+    <inertial>
+      <origin
+        xyz="0.64529 -3.0777E-07 3.4374E-06"
+        rpy="0 0 0" />
+      <mass
+        value="64.615" />
+      <inertia
+        ixx="0.09831"
+        ixy="-9.7663E-06"
+        ixz="-2.3047E-05"
+        iyy="13.524"
+        iyz="-2.2096E-06"
+        izz="13.476" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://invertedPendulum/meshes/pole.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.64706 0.61961 0.58824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://invertedPendulum/meshes/pole.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="cart_to_pole"
+    type="continuous">
+    <origin
+      xyz="-0.25 0.39 0"
+      rpy="0 0 1.5708" />
+    <parent
+      link="cart" />
+    <child
+      link="pole" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+    <dynamics
+      damping="1.0"/>
+  </joint>
+</robot>
