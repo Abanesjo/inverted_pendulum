@@ -1,12 +1,21 @@
+from hashlib import sha224
 import os
 from launch_ros.substitutions import FindPackageShare
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.actions import Node
+from launch.actions import ExecuteProcess
 
 def generate_launch_description():
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+    name='use_sim_time',
+    default_value='true',
+    description='Use simulation (Gazebo) clock if true')
+
     share_dir = FindPackageShare(package='inverted_pendulum').find('inverted_pendulum')
 
     world_file_name = 'default.world'
@@ -18,6 +27,8 @@ def generate_launch_description():
     gazebo_plugins_path = os.path.join(share_dir, 'inverted_pendulum')
     os.environ["GAZEBO_PLUGIN_PATH"] = gazebo_plugins_path
 
+    plot_path = os.path.join(share_dir, 'rviz', 'plotJuggler.xml')
+
     gazebo_server = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -27,7 +38,7 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            'pause': 'false',
+            'pause': 'true',
             'world': world_path,
             'verbose': 'true'
         }.items()
@@ -43,7 +54,20 @@ def generate_launch_description():
         ])
     )
 
+    plot_juggler = ExecuteProcess(
+        cmd=[
+            'ros2',
+            'run',
+            'plotjuggler',
+            'plotjuggler',
+            '-l',
+            plot_path
+        ]
+    )
+
     return LaunchDescription([
+        declare_use_sim_time_cmd,
         gazebo_server,
         gazebo_client,
+        plot_juggler
     ])

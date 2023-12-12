@@ -7,6 +7,13 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     # these are the arguments you can pass this launch file, for example paused:=true
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+    name='use_sim_time',
+    default_value='true',
+    description='Use simulation (Gazebo) clock if true')
+
     gui_arg = DeclareLaunchArgument(
         name='gui',
         default_value='true',
