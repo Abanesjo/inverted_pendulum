@@ -144,10 +144,10 @@
         </geometry>
       </visual>
     </link>
+    <plugin name="PID" filename="libpid_controller.so">
+      <namespace>inverted_pendulum</namespace>
+      <revolute_joint>cart_to_pole</revolute_joint>
+      <prismatic_joint>rail_to_cart</prismatic_joint>
+    </plugin>
   </model>
-  <plugin name="PID" filename="libpid_controller.so">
-    <namespace>inverted_pendulum</namespace>
-    <revolute_joint>cart_to_pole</revolute_joint>
-    <prismatic_joint>rail_to_cart</prismatic_joint>
-  </plugin>
 </sdf>

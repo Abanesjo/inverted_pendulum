@@ -27,7 +27,7 @@ private:
 public:
     double LIM_;
     rclcpp::Node::SharedPtr nh;
-    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr force_feedback;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr angle_measurement, force_feedback;
 
     void Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
     {
@@ -46,7 +46,8 @@ public:
         this->revolute = this->model->GetJoint(ns+"::"+revolute_joint);
         this->prismatic = this->model->GetJoint(ns+"::"+prismatic_joint);
 
-        force_feedback = nh->create_publisher<std_msgs::msg::Float64>(ns+"/force", 1);
+        force_feedback = nh->create_publisher<std_msgs::msg::Float64>("/force", 1);
+        angle_measurement = nh->create_publisher<std_msgs::msg::Float64>("/angle", 1);
 
         this->updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&PIDController::Update, this));
     }
@@ -58,13 +59,17 @@ public:
         double rate = this->revolute->GetVelocity(0);
 
         force = -(this->Kp) * (angle - this->cmd) - Kd*rate;
-        this->prismatic->SetForce(0, 1000000);
+        this->prismatic->SetForce(0, force);
 
         std_msgs::msg::Float64 feedback_msg;
         feedback_msg.data = force;
         force_feedback->publish(feedback_msg);
 
-        printf("HELLO_WORLD!\n");
+        std_msgs::msg::Float64 angle_msg;
+        angle_msg.data = angle;
+        angle_measurement->publish(angle_msg);
+
+        // std::cout << "Force: " << force << "\n";
 
         return;
     }
